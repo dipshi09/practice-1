@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: python-webapp-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: nginx
+  rules:
+    - host:  # Change to your domain or leave empty for default
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: python-webapp
+                port:
+                  number: 5000
+          - path: /nginx
+            pathType: Prefix
+            backend:
+               service:
+                  name: nginx-svc
+                  port:
+                    number: 80  
