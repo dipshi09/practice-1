@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+   name: python-webapp
+   labels:
+      app: python-webapp
+spec:
+    selector:
+       matchLabels:
+           app: python_webapp
+    replicas: 1
+    template:
+        metadata:
+          name: python-webapp
+          labels:
+             app: python-webapp
+        spec:
+           containers:
+           - name: python-webapp
+             image: dipshi/app1:274
+             ports:
+             - containerPort: 5000
