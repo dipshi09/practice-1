@@ -23,6 +23,10 @@ spec:
           - name: nginx-config
             mountPath: /etc/nginx/nginx.conf
             subPath: nginx.conf
+        - name: python-webapp
+          image: dipshi/app1:274
+          ports:
+            - containerPort: 5000    
       volumes:
       - name: nginx-config
         configMap:
