@@ -18,17 +18,60 @@ spec:
         - name: nginx-proxy
           image: nginx
           ports:
-            - containerPort: 5000
+            - containerPort: 80
           volumeMounts:
           - name: nginx-config
             mountPath: /etc/nginx/nginx.conf
             subPath: nginx.conf
+          
+          # Readiness Probe (checks if Nginx is ready to receive traffic)
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 3
+            periodSeconds: 5
+            failureThreshold: 3
+          
+          # Liveness Probe (checks if Nginx is alive; restarts if it fails)
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            failureThreshold: 3
+
         - name: python-webapp
           image: dipshi/app1:274
           ports:
-            - containerPort: 5000    
+            - containerPort: 5000   
+          volumeMounts:
+            - mountPath: "/app/data"
+              name: my-storage 
+
+          # Readiness Probe (checks if Python app is ready)
+          readinessProbe:
+            httpGet:
+              path: /  # Ensure the app has a /health endpoint
+              port: 5000
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            failureThreshold: 3
+
+          # Liveness Probe (checks if Python app is alive and restarts if not)
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 5000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            failureThreshold: 3
+
       volumes:
       - name: nginx-config
         configMap:
           name: nginx-config
-          
+      - name: my-storage
+        persistentVolumeClaim:
+          claimName: python-webapp-pvc
