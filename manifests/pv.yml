@@ -1,6 +1,7 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
+  namespace: client-a
   name: python-webapp-pv
 spec:
   capacity:
