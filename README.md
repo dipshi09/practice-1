@@ -19,4 +19,7 @@ helm upgrade --install ingress-nginx ingress-nginx \
   --set controller.service.nodePorts.https=30443
 
 
+kubectl label namespace ingress-nginx name=ingress-nginx --overwrite
+
+
   
